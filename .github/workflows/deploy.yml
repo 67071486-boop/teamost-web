@@ -31,7 +31,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
-          username: teamost
+          username: nick2806844715
           password: Ghh15377167407.
 
       - name: Build and push ${{ matrix.image }}
