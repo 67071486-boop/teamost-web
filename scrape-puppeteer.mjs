@@ -1,13 +1,16 @@
 import puppeteer from 'puppeteer';
 import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join, dirname, extname } from 'path';
+import { replaceBrand } from './replace-brand.mjs';
 
 const BASE_URL = 'https://mattermost.com';
 
 const PAGES = [
-  { url: '/apps/', dir: 'apps' },
-  { url: '/mobile/', dir: 'mobile' },
-  { url: '/download/', dir: 'download' },
+  { url: '/', dir: '' },               // Homepage → static/index.html
+  // 以下页面已抓取过，不再重复：
+  // { url: '/apps/', dir: 'apps' },
+  // { url: '/mobile/', dir: 'mobile' },
+  // { url: '/download/', dir: 'download' },
 ];
 
 // 静态资源扩展名
@@ -212,7 +215,10 @@ async function main() {
       '<!-- external script removed -->'
     );
 
-    // 6. 保存
+    // 6. 品牌名替换: Mattermost → Teamost
+    updatedHtml = replaceBrand(updatedHtml);
+
+    // 7. 保存
     const pageDir = join(outputDir, pg.dir);
     if (!existsSync(pageDir)) mkdirSync(pageDir, { recursive: true });
     writeFileSync(join(pageDir, 'index.html'), updatedHtml, 'utf-8');

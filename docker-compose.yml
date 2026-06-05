@@ -1,0 +1,18 @@
+services:
+  teamost-website:
+    image: ${ACR_REGISTRY:-crpi-1rw5u2cpo17otwz5.cn-hangzhou.personal.cr.aliyuncs.com}/${ACR_NAMESPACE:-nick2806844715}/teamost-website:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "8443:443"
+    volumes:
+      - /etc/ssl/teamost:/etc/ssl/teamost:ro
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  watchtower:
+    image: containrrr/watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30 --cleanup --label-enable
