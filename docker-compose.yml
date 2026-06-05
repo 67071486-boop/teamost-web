@@ -10,6 +10,20 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
+  admin:
+    image: ${ACR_REGISTRY:-crpi-1rw5u2cpo17otwz5.cn-hangzhou.personal.cr.aliyuncs.com}/${ACR_NAMESPACE:-teamost}/teamost-admin:latest
+    restart: unless-stopped
+    expose:
+      - "3000"
+    volumes:
+      - /opt/teamost/data:/opt/teamost/data
+    environment:
+      - PORT=3000
+      - DB_PATH=/opt/teamost/data/licenses.db
+      - JWT_SECRET=${JWT_SECRET:-teamost-admin-secret-change-me}
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
   watchtower:
     image: containrrr/watchtower
     restart: unless-stopped

@@ -1,4 +1,4 @@
-name: Deploy Teamost Website
+name: Deploy Teamost
 
 on:
   push:
@@ -7,12 +7,18 @@ on:
 env:
   REGISTRY: crpi-1rw5u2cpo17otwz5.cn-hangzhou.personal.cr.aliyuncs.com
   NAMESPACE: teamost
-  IMAGE_NAME: teamost-website
-  IMAGE_TAG: latest
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - image: teamost-website
+            dockerfile: Dockerfile
+          - image: teamost-admin
+            dockerfile: Dockerfile.admin
 
     steps:
       - name: Checkout code
@@ -28,11 +34,12 @@ jobs:
           username: teamost
           password: Ghh15377167407.
 
-      - name: Build and push Docker image
+      - name: Build and push ${{ matrix.image }}
         uses: docker/build-push-action@v6
         with:
           context: .
+          file: ${{ matrix.dockerfile }}
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          tags: ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ matrix.image }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
