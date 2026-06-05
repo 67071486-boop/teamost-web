@@ -1,6 +1,6 @@
 services:
   teamost-website:
-    image: ${ACR_REGISTRY:-crpi-1rw5u2cpo17otwz5.cn-hangzhou.personal.cr.aliyuncs.com}/${ACR_NAMESPACE:-nick2806844715}/teamost-website:latest
+    image: ${ACR_REGISTRY:-crpi-1rw5u2cpo17otwz5.cn-hangzhou.personal.cr.aliyuncs.com}/${ACR_NAMESPACE:-teamost}/teamost-website:latest
     restart: unless-stopped
     ports:
       - "80:80"
