@@ -12,20 +12,9 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        include:
-          - image: teamost-website
-            dockerfile: Dockerfile
-          - image: teamost-admin
-            dockerfile: Dockerfile.admin
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
 
       - name: Log in to Alibaba Cloud Container Registry
         uses: docker/login-action@v3
@@ -34,12 +23,7 @@ jobs:
           username: nick2806844715
           password: Ghh15377167407.
 
-      - name: Build and push ${{ matrix.image }}
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ${{ matrix.dockerfile }}
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ matrix.image }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      - name: Build and push teamost-website
+        run: |
+          docker build -t ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/teamost-website:latest .
+          docker push ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/teamost-website:latest
